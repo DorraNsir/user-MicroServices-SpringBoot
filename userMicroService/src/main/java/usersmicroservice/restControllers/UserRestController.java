@@ -15,6 +15,7 @@ import usersmicroservice.service.UserService;
 public class UserRestController {
 	@Autowired
 	UserService userService;
+	
 	@GetMapping("all")
 	public List<User> getAllUsers() {
 	return userService.findAllUsers();

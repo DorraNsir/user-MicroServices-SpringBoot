@@ -33,7 +33,8 @@ public class UserServiceImpl implements UserService{
 	User usr = userRep.findByUsername(username);
 	Role r = roleRep.findByRole(rolename);
 	usr.getRoles().add(r);
-	return usr;
+	// return usr;
+	return userRep.save(usr);
 	}
 	@Override
 	public Role addRole(Role role) {
