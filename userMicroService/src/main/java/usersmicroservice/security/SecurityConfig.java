@@ -1,5 +1,6 @@
 package usersmicroservice.security;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,43 +17,45 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	@Autowired
-	AuthenticationManager authMgr;
-	
-	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws
-	Exception { 
-	 
-	 http.sessionManagement(session -> 
-	session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	 
-	 .csrf(csrf -> csrf.disable())
-	 .cors(cors -> cors.configurationSource(new CorsConfigurationSource() 
-	  { 
-	              @Override 
-	              public CorsConfiguration getCorsConfiguration(HttpServletRequest 
-	  request) { 
-	                  CorsConfiguration cors = new CorsConfiguration(); 
-	  cors.setAllowedOrigins(Collections.singletonList("http://localhost:4200")); 
-	  cors.setAllowedMethods(Collections.singletonList("*")); 
-	  cors.setAllowedHeaders(Collections.singletonList("*")); 
-	  cors.setExposedHeaders(Collections.singletonList("Authorization")); 
-	                  return cors; 
-	              } 
-	          }))
-	.authorizeHttpRequests(requests-> requests
-			.requestMatchers("/login").permitAll()
-			.requestMatchers("/all").hasAuthority("ADMIN")
-			.anyRequest().authenticated())
-	.addFilterBefore(new JWTAuthenticationFilter (authMgr),
-			  UsernamePasswordAuthenticationFilter.class)
-	.addFilterBefore(new JWTAuthorizationFilter(),UsernamePasswordAuthenticationFilter.class);
-	
-	return http.build();
-	}
-
+    @Autowired
+    AuthenticationManager authMgr;
+    
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception { 
+        http.sessionManagement(session -> 
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            
+            .csrf(csrf -> csrf.disable())
+            
+            // CORS configuration
+            .cors(cors -> cors.configurationSource(new CorsConfigurationSource() { 
+                @Override 
+                public CorsConfiguration getCorsConfiguration(HttpServletRequest request) { 
+                    CorsConfiguration cors = new CorsConfiguration(); 
+                    cors.setAllowedOrigins(Collections.singletonList("http://localhost:4200")); 
+                    cors.setAllowedMethods(Collections.singletonList("*")); 
+                    cors.setAllowCredentials(true); 
+                    cors.setAllowedHeaders(Collections.singletonList("*")); 
+                    cors.setExposedHeaders(Arrays.asList("Authorization")); 
+                    cors.setMaxAge(3600L);
+                    return cors; 
+                } 
+            }))
+            
+            // Request authorization
+            .authorizeHttpRequests(requests -> 
+                requests
+				.requestMatchers("/login","/register/**").permitAll()
+                    .requestMatchers("/all").hasAuthority("ADMIN")
+                    .anyRequest().authenticated())
+            
+            // Filters
+            .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        
+        return http.build();
+    }
 }

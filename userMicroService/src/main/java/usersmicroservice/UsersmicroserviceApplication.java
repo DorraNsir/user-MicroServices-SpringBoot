@@ -20,18 +20,31 @@ public class UsersmicroserviceApplication {
 	
 	// @PostConstruct
 	// void init_users() {
-	// //ajouter les rôles
-	// userService.addRole(new Role(null,"ADMIN"));
-	// userService.addRole(new Role(null,"USER"));
-	// //ajouter les users
-	// userService.saveUser(new User(null,"admin","123",true,null));
-	// userService.saveUser(new User(null,"nadhem","123",true,null));
-	// userService.saveUser(new User(null,"yassine","123",true,null));
-	// //ajouter les rôles aux users
-	// userService.addRoleToUser("admin", "ADMIN");
-	// userService.addRoleToUser("admin", "USER");
-	// userService.addRoleToUser("nadhem", "USER");
-	// userService.addRoleToUser("yassine", "USER");
-	// } 
+	// 	// Check if roles already exist before adding
+	// 	if (userService.getRoleByName("ADMIN") == null) {
+	// 		userService.addRole(new Role(null, "ADMIN"));
+	// 	}
+	// 	if (userService.getRoleByName("USER") == null) {
+	// 		userService.addRole(new Role(null, "USER"));
+	// 	}
+	
+	// 	// Check if users already exist before adding
+	// 	if (userService.getUserByUsername("admin") == null) {
+	// 		userService.saveUser(new User(null, "admin", "123", true, null));
+	// 	}
+	// 	if (userService.getUserByUsername("nadhem") == null) {
+	// 		userService.saveUser(new User(null, "nadhem", "123", true, null));
+	// 	}
+	// 	if (userService.getUserByUsername("yassine") == null) {
+	// 		userService.saveUser(new User(null, "dorra", "123", true, null));
+	// 	}
+	
+	// 	// Assign roles to users if not already assigned
+	// 	userService.addRoleToUser("admin", "ADMIN");
+	// 	userService.addRoleToUser("admin", "USER");
+	// 	userService.addRoleToUser("nadhem", "USER");
+	// 	userService.addRoleToUser("yassine", "USER");
+	// }
+	
 
 }
